@@ -1,0 +1,12 @@
+{
+  "name": "aigroup-lead-discovery-openclaw",
+  "version": "0.1.0",
+  "private": false,
+  "description": "Lead discovery and company-watch bundle for banker outbound workflows on OpenClaw",
+  "license": "Apache-2.0",
+  "type": "module",
+  "scripts": {
+    "validate:bundle": "python3 scripts/validate_bundle.py .",
+    "prepare:release": "python3 scripts/prepare_release_bundle.py /tmp/aigroup-lead-discovery-openclaw-release"
+  }
+}

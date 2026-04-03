@@ -67,6 +67,20 @@ openclaw plugins inspect aigroup-lead-discovery-openclaw
 openclaw skills list
 ```
 
+## Release Prep
+
+To prepare the minimal publishable artifact used for ClawHub releases:
+
+```bash
+python3 scripts/prepare_release_bundle.py /tmp/aigroup-lead-discovery-openclaw-release
+```
+
+To validate the repository bundle shape directly:
+
+```bash
+python3 scripts/validate_bundle.py .
+```
+
 ## Environment
 
 Set these before using the plugin:
