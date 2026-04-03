@@ -80,6 +80,10 @@ Recommended companion package:
 
 - `aigroup-financial-services-openclaw`
 
+Quick install guide:
+
+- [docs/quickstart.md](docs/quickstart.md)
+
 ## Verify After Install
 
 ```bash
