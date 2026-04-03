@@ -10,6 +10,7 @@ from typing import Any, Dict, Optional
 
 BASE_URL = os.environ.get("BASE_URL", "https://mcp.yidian.cn/api").rstrip("/")
 MCP_API_KEY = os.environ.get("MCP_API_KEY", "")
+ENABLE_NPM_INIT = os.environ.get("PRIMEMATRIX_ENABLE_NPM_INIT", "").lower() in {"1", "true", "yes"}
 SESSION_ID: Optional[str] = None
 LOG_PATH = os.environ.get("CODEX_MCP_DEBUG_LOG", "/tmp/prime_matrix_codex_bridge.log")
 
@@ -224,14 +225,14 @@ def request_json(path: str, query_params: Dict[str, Any], session_id: Optional[s
     if query:
         url = f"{url}?{query}"
     headers = {"x-api-key": MCP_API_KEY, "X-MCP-Source": "mcp-stdio"}
-    if session_id:
-        headers["npm-session-id"] = session_id
     req = urllib.request.Request(url, headers=headers)
     with urllib.request.urlopen(req, timeout=45) as resp:
         return json.loads(resp.read().decode("utf-8"))
 
 
 def notify_init(session_id: str) -> None:
+    if not ENABLE_NPM_INIT:
+        return
     url = f"{BASE_URL}/npm-init"
     req = urllib.request.Request(url, headers={"X-MCP-Source": "mcp-stdio", "mcp-session-id": session_id})
     try:
@@ -243,8 +244,8 @@ def notify_init(session_id: str) -> None:
 
 def handle_initialize(request_id: Any, params: Dict[str, Any]) -> None:
     global SESSION_ID
-    SESSION_ID = str(uuid.uuid4())
-    notify_init(SESSION_ID)
+    # PrimeMatrix endpoints work reliably without session state.
+    SESSION_ID = None
     protocol_version = params.get("protocolVersion", "2024-11-05")
     write_message(
         {

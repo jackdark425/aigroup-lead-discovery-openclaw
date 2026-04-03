@@ -6,7 +6,7 @@ import urllib.request
 from typing import Any, Dict, Optional
 
 
-REMOTE_URL = os.environ["TIANYANCHA_URL"]
+REMOTE_URL = os.environ.get("TIANYANCHA_URL") or os.environ["TIANYANCHA_MCP_URL"]
 AUTHORIZATION = os.environ["TIANYANCHA_AUTHORIZATION"]
 SESSION_ID: Optional[str] = None
 INITIALIZED = False

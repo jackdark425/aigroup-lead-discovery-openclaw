@@ -1,7 +1,7 @@
 {
   "name": "aigroup-lead-discovery-openclaw",
   "description": "Lead discovery and company-watch bundle for banker outbound workflows, combining company screening SOP skills with Tianyancha and PrimeMatrixData connectors",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "skills": "skills",
   "mcpServers": ".mcp.json"
 }
