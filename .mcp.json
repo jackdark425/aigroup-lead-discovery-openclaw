@@ -1,0 +1,41 @@
+{
+  "mcpServers": {
+    "PrimeMatrixData-stdio": {
+      "command": "python3",
+      "args": [
+        "./scripts/mcp_compat/prime_matrix_stdio_bridge.py"
+      ],
+      "env": {
+        "MCP_API_KEY": "${PRIMEMATRIX_MCP_API_KEY}",
+        "BASE_URL": "${PRIMEMATRIX_BASE_URL}"
+      },
+      "alwaysAllow": [
+        "company_name",
+        "basic_info",
+        "judicial_info",
+        "risk_info",
+        "ip_info",
+        "shareholder_info",
+        "honor_info",
+        "statistic_info",
+        "stk_company_basic_info",
+        "finance_info",
+        "job_info"
+      ]
+    },
+    "Tianyancha": {
+      "command": "python3",
+      "args": [
+        "./scripts/mcp_compat/tianyancha_stdio_bridge.py"
+      ],
+      "env": {
+        "TIANYANCHA_URL": "${TIANYANCHA_MCP_URL}",
+        "TIANYANCHA_AUTHORIZATION": "${TIANYANCHA_AUTHORIZATION}"
+      },
+      "alwaysAllow": [
+        "companyBaseInfo",
+        "risk"
+      ]
+    }
+  }
+}

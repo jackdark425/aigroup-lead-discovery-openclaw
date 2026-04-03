@@ -1,0 +1,4 @@
+Copyright 2026 AIGroup
+
+This repository packages AIGroup-authored lead-discovery workflow skills and
+local stdio bridge helpers for OpenClaw-compatible bundle installation.
