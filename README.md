@@ -38,6 +38,12 @@ OpenClaw detects this repository as a Claude bundle and maps:
 
 ## Install
 
+### OpenClaw Hub
+
+```bash
+openclaw plugins install aigroup-lead-discovery-openclaw
+```
+
 ### Local path
 
 ```bash
@@ -50,7 +56,11 @@ openclaw plugins install ./aigroup-lead-discovery-openclaw
 openclaw plugins install jackdark425/aigroup-lead-discovery-openclaw
 ```
 
-After install:
+Published package:
+
+- `aigroup-lead-discovery-openclaw@0.1.0`
+
+## Verify After Install
 
 ```bash
 openclaw plugins inspect aigroup-lead-discovery-openclaw
