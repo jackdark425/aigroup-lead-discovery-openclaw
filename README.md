@@ -1,8 +1,8 @@
 # aigroup-lead-discovery-openclaw
 
-Lead-discovery and company-watch plugin for banker outbound workflows on OpenClaw.
+Lead-discovery and company-intelligence suite for banker workflows on OpenClaw.
 
-This plugin is the recommended AIGroup data-entry layer for banker outbound, customer research, and external lead intelligence workflows.
+This plugin is the recommended first install in the AIGroup banker stack. Install it first as the intelligence and data-entry suite, then add `aigroup-financial-services-openclaw` as the downstream modeling and deliverables suite.
 
 This repository is a standalone OpenClaw-compatible Claude bundle. It packages:
 
@@ -54,6 +54,13 @@ OpenClaw detects this repository as a Claude bundle and maps:
 
 ## Install
 
+Recommended suite-first install flow:
+
+```bash
+openclaw plugins install aigroup-lead-discovery-openclaw
+openclaw plugins install aigroup-financial-services-openclaw
+```
+
 ### OpenClaw Hub
 
 ```bash
@@ -88,6 +95,7 @@ Quick install guide:
 
 ```bash
 openclaw plugins inspect aigroup-lead-discovery-openclaw
+openclaw plugins inspect aigroup-financial-services-openclaw
 openclaw skills list
 ```
 
@@ -147,4 +155,4 @@ See [docs/validation.md](./docs/validation.md).
 
 - The plugin is distributed as a compatible bundle, not a native in-process OpenClaw plugin.
 - The Tianyancha and PrimeMatrixData integrations are routed through local stdio bridges because that is the most reliable way to make them usable from bundle MCP today.
-- The recommended deployment model is: use this plugin for intelligence and data gathering, then use `aigroup-financial-services-openclaw` for modeling and deliverable workflows.
+- The recommended deployment model is suite-first: use this plugin for intelligence and data gathering, then use `aigroup-financial-services-openclaw` for modeling and deliverable workflows.

@@ -1,8 +1,8 @@
 {
   "name": "aigroup-lead-discovery-openclaw",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "private": false,
-  "description": "Lead discovery and company-watch bundle for banker outbound workflows on OpenClaw",
+  "description": "Lead-discovery and company-intelligence suite for OpenClaw",
   "license": "Apache-2.0",
   "type": "module",
   "scripts": {
