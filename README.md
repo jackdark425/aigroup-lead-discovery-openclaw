@@ -81,7 +81,7 @@ openclaw plugins install jackdark425/aigroup-lead-discovery-openclaw
 
 Published package:
 
-- `aigroup-lead-discovery-openclaw@0.1.4`
+- `aigroup-lead-discovery-openclaw@0.1.5`
 
 Recommended companion package:
 
@@ -101,17 +101,13 @@ openclaw skills list
 
 ## Release Prep
 
-To prepare the minimal publishable artifact used for ClawHub releases:
-
-```bash
-python3 scripts/prepare_release_bundle.py /tmp/aigroup-lead-discovery-openclaw-release
-```
-
-To validate the repository bundle shape directly:
+Validate the repository bundle shape directly:
 
 ```bash
 python3 scripts/validate_bundle.py .
 ```
+
+ClawHub releases should be published from the repository root. `.clawhubignore` trims non-runtime files while preserving `.claude-plugin/plugin.json`, which is required for correct install identity on fresh OpenClaw profiles.
 
 ## Environment
 

@@ -1,0 +1,5 @@
+.gitignore
+.github/
+docs/
+scripts/prepare_release_bundle.py
+scripts/validate_bundle.py
