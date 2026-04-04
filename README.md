@@ -42,7 +42,7 @@ It is also designed to be used alongside the AIGroup data-service MCP stack:
 
 ```text
 .claude-plugin/plugin.json
-.mcp.json
+.mcp.optional.json
 skills/
 scripts/mcp_compat/
 ```
@@ -50,7 +50,7 @@ scripts/mcp_compat/
 OpenClaw detects this repository as a Claude bundle and maps:
 
 - `skills/` into normal OpenClaw skills
-- `.mcp.json` into bundle MCP settings
+- `.mcp.optional.json` as an optional MCP template
 
 ## Install
 
@@ -154,5 +154,5 @@ See [docs/validation.md](./docs/validation.md).
 ## Notes
 
 - The plugin is distributed as a compatible bundle, not a native in-process OpenClaw plugin.
-- The Tianyancha and PrimeMatrixData integrations are routed through local stdio bridges because that is the most reliable way to make them usable from bundle MCP today.
+- The Tianyancha and PrimeMatrixData integrations are routed through local stdio bridge scripts. The default suite path uses skills plus stable `exec` commands; the optional MCP template is kept for advanced experiments only.
 - The recommended deployment model is suite-first: use this plugin for intelligence and data gathering, then use `aigroup-financial-services-openclaw` for modeling and deliverable workflows.

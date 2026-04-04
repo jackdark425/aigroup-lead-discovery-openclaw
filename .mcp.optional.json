@@ -1,9 +1,9 @@
 {
   "mcpServers": {
     "PrimeMatrixData-stdio": {
-      "command": "python3",
+      "command": "node",
       "args": [
-        "./scripts/mcp_compat/prime_matrix_stdio_bridge.py"
+        "./scripts/mcp_compat/prime_matrix_stdio_bridge.mjs"
       ],
       "env": {
         "MCP_API_KEY": "${PRIMEMATRIX_MCP_API_KEY}",
@@ -24,9 +24,9 @@
       ]
     },
     "Tianyancha": {
-      "command": "python3",
+      "command": "node",
       "args": [
-        "./scripts/mcp_compat/tianyancha_stdio_bridge.py"
+        "./scripts/mcp_compat/tianyancha_stdio_bridge.mjs"
       ],
       "env": {
         "TIANYANCHA_URL": "${TIANYANCHA_MCP_URL}",

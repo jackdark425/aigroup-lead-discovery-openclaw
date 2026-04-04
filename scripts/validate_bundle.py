@@ -9,7 +9,6 @@ from pathlib import Path
 
 REQUIRED_FILES = [
     ".claude-plugin/plugin.json",
-    ".mcp.json",
     "README.md",
     "LICENSE",
     "NOTICE",
@@ -83,7 +82,9 @@ def main() -> None:
         if not (skill_dir / "SKILL.md").is_file():
             fail(f"missing SKILL.md for skill: {skill_dir.name}")
 
-    load_json(root / ".mcp.json")
+    optional_mcp = root / ".mcp.optional.json"
+    if optional_mcp.exists():
+        load_json(optional_mcp)
 
     if args.strict_release:
         for relative_path in FORBIDDEN_RELEASE_PATHS:

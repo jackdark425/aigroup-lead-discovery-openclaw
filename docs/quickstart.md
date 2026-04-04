@@ -19,7 +19,7 @@ Expected results:
 
 - the plugin shows `Status: loaded`
 - the bundle format shows `claude`
-- the plugin exposes `PrimeMatrixData-stdio` and `Tianyancha`
+- the plugin ships stable PrimeMatrixData and Tianyancha bridge scripts and skills that can call them through `exec`
 - the four lead-discovery skills appear as available skills
 
 ## What This Plugin Does

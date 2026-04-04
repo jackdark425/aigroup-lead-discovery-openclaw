@@ -9,8 +9,8 @@ This plugin was validated as an OpenClaw-compatible Claude bundle.
 - `openclaw plugins inspect aigroup-lead-discovery-openclaw`
 - bundle format detected as `claude`
 - bundle MCP connectors recognized:
-  - `PrimeMatrixData-stdio`
-  - `Tianyancha`
+  - PrimeMatrixData bridge script
+  - Tianyancha bridge script
 - bundle skills discovered and marked `ready`:
   - `client-initial-screening`
   - `company-event-scan`
@@ -21,7 +21,7 @@ This plugin was validated as an OpenClaw-compatible Claude bundle.
 
 - Format: bundle
 - Capability mode: non-capability
-- Bundle capabilities: `skills`, `mcpServers`
+- Bundle capabilities: `skills`
 
 ## Notes
 

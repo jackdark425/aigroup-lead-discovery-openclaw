@@ -15,6 +15,22 @@ description: 客户首访前 briefing 技能。适用于“明天要拜访这家
 4. 用 `job_info` / `honor_info` / `ip_info` 补增长与亮点
 5. 补最新网页搜索，找最近 90 天事件
 
+## OpenClaw 稳定调用路径
+
+如果 `PrimeMatrixData-stdio` 或 `Tianyancha` 在当前宿主注入失败，改用：
+
+```bash
+cd ~/.openclaw/extensions/aigroup-lead-discovery-openclaw
+node scripts/mcp_compat/prime_matrix_stdio_bridge.mjs company_name '{"blur_name":"华为"}'
+node scripts/mcp_compat/prime_matrix_stdio_bridge.mjs basic_info '{"company_name":"华为技术有限公司"}'
+node scripts/mcp_compat/prime_matrix_stdio_bridge.mjs shareholder_info '{"company_name":"华为技术有限公司"}'
+node scripts/mcp_compat/prime_matrix_stdio_bridge.mjs job_info '{"company_name":"华为技术有限公司"}'
+node scripts/mcp_compat/prime_matrix_stdio_bridge.mjs honor_info '{"company_name":"华为技术有限公司"}'
+node scripts/mcp_compat/prime_matrix_stdio_bridge.mjs ip_info '{"company_name":"华为技术有限公司"}'
+node scripts/mcp_compat/tianyancha_stdio_bridge.mjs companyBaseInfo '{"companyName":"华为技术有限公司"}'
+node scripts/mcp_compat/tianyancha_stdio_bridge.mjs risk '{"companyName":"华为技术有限公司"}'
+```
+
 ## 输出模板
 
 ### 客户画像

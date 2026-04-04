@@ -9,7 +9,7 @@ from pathlib import Path
 
 INCLUDE_PATHS = [
     ".claude-plugin",
-    ".mcp.json",
+    ".mcp.optional.json",
     "skills",
     "scripts/mcp_compat",
     "README.md",
