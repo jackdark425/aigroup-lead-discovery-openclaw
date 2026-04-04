@@ -81,7 +81,7 @@ openclaw plugins install jackdark425/aigroup-lead-discovery-openclaw
 
 Published package:
 
-- `aigroup-lead-discovery-openclaw@0.1.5`
+- `aigroup-lead-discovery-openclaw@0.1.6`
 
 Recommended companion package:
 
@@ -150,5 +150,5 @@ See [docs/validation.md](./docs/validation.md).
 ## Notes
 
 - The plugin is distributed as a compatible bundle, not a native in-process OpenClaw plugin.
-- The Tianyancha and PrimeMatrixData integrations are routed through local stdio bridge scripts. The default suite path uses skills plus stable `exec` commands; the optional MCP template is kept for advanced experiments only.
+- The Tianyancha and PrimeMatrixData integrations are routed through bundled Python bridge scripts. The default suite path uses skills plus stable `exec` commands; the optional MCP template is kept for advanced experiments only.
 - The recommended deployment model is suite-first: use this plugin for intelligence and data gathering, then use `aigroup-financial-services-openclaw` for modeling and deliverable workflows.

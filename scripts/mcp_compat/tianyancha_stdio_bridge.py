@@ -3,11 +3,36 @@ import json
 import os
 import sys
 import urllib.request
+from pathlib import Path
 from typing import Any, Dict, Optional
 
 
-REMOTE_URL = os.environ.get("TIANYANCHA_URL") or os.environ["TIANYANCHA_MCP_URL"]
-AUTHORIZATION = os.environ["TIANYANCHA_AUTHORIZATION"]
+def load_openclaw_config() -> Dict[str, Any]:
+    config_path = Path.home() / ".openclaw" / "openclaw.json"
+    try:
+        return json.loads(config_path.read_text(encoding="utf-8"))
+    except Exception:
+        return {}
+
+
+def resolve_tianyancha_settings(config: Dict[str, Any]) -> Dict[str, str]:
+    env_url = os.environ.get("TIANYANCHA_URL") or os.environ.get("TIANYANCHA_MCP_URL")
+    env_auth = os.environ.get("TIANYANCHA_AUTHORIZATION")
+    if env_url and env_auth:
+        return {"url": env_url, "authorization": env_auth}
+    providers = (((config.get("models") or {}).get("providers")) or {})
+    provider = providers.get("tianyancha") or {}
+    url = provider.get("baseUrl") if isinstance(provider.get("baseUrl"), str) else ""
+    auth = provider.get("apiKey") if isinstance(provider.get("apiKey"), str) else ""
+    if auth == "TIANYANCHA_AUTHORIZATION":
+        auth = os.environ.get("TIANYANCHA_AUTHORIZATION", "")
+    return {"url": url, "authorization": auth}
+
+
+CONFIG = load_openclaw_config()
+SETTINGS = resolve_tianyancha_settings(CONFIG)
+REMOTE_URL = SETTINGS["url"]
+AUTHORIZATION = SETTINGS["authorization"]
 SESSION_ID: Optional[str] = None
 INITIALIZED = False
 LOG_PATH = os.environ.get("CODEX_MCP_DEBUG_LOG", "/tmp/tianyancha_codex_bridge.log")
@@ -91,6 +116,18 @@ def remote_post(payload: Dict[str, Any], session_id: Optional[str]) -> Optional[
         return json.loads(body)
 
 
+def rewrite_cli_payload(payload: Dict[str, Any]) -> Dict[str, Any]:
+    method = payload.get("method")
+    if method != "tools/call":
+        return payload
+    params = payload.setdefault("params", {})
+    tool_name = params.get("name")
+    arguments = params.setdefault("arguments", {})
+    if tool_name in {"companyBaseInfo", "risk"} and "companyName" in arguments and "keyword" not in arguments:
+        arguments["keyword"] = arguments["companyName"]
+    return payload
+
+
 def handle_initialize(message: Dict[str, Any]) -> None:
     global SESSION_ID
     payload = {
@@ -126,7 +163,7 @@ def handle_initialized() -> None:
 
 def handle_forward(message: Dict[str, Any]) -> None:
     try:
-        response = remote_post(message, SESSION_ID)
+        response = remote_post(rewrite_cli_payload(message), SESSION_ID)
         if response is not None:
             write_message(response)
         elif "id" in message:
@@ -142,7 +179,38 @@ def handle_forward(message: Dict[str, Any]) -> None:
             )
 
 
+def run_cli(tool_name: str, arguments: Dict[str, Any]) -> int:
+    payload = rewrite_cli_payload(
+        {
+            "jsonrpc": "2.0",
+            "id": "cli",
+            "method": "tools/call",
+            "params": {"name": tool_name, "arguments": arguments},
+        }
+    )
+    try:
+        response = remote_post({"jsonrpc": "2.0", "id": 1, "method": "initialize", "params": {"protocolVersion": "2024-11-05", "capabilities": {}, "clientInfo": {"name": "lead-discovery-cli", "version": "1.0.0"}}}, None)
+        if response is None:
+            print(json.dumps({"ok": False, "error": "No initialize response"}, ensure_ascii=False))
+            return 1
+        result = remote_post(payload, SESSION_ID)
+        print(json.dumps(result, ensure_ascii=False))
+        return 0
+    except Exception as exc:
+        print(json.dumps({"ok": False, "error": str(exc)}, ensure_ascii=False))
+        return 1
+
+
 def main() -> None:
+    if len(sys.argv) >= 3:
+        tool_name = sys.argv[1]
+        try:
+            arguments = json.loads(sys.argv[2])
+        except Exception as exc:
+            print(json.dumps({"ok": False, "error": f"Invalid JSON args: {exc}"}, ensure_ascii=False))
+            raise SystemExit(1)
+        raise SystemExit(run_cli(tool_name, arguments))
+
     while True:
         message = read_message()
         if message is None:

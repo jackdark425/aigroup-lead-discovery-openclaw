@@ -2,15 +2,13 @@
 import json
 import os
 import sys
-import uuid
 import urllib.parse
 import urllib.request
+from pathlib import Path
 from typing import Any, Dict, Optional
 
 
-BASE_URL = os.environ.get("BASE_URL", "https://mcp.yidian.cn/api").rstrip("/")
-MCP_API_KEY = os.environ.get("MCP_API_KEY", "")
-ENABLE_NPM_INIT = os.environ.get("PRIMEMATRIX_ENABLE_NPM_INIT", "").lower() in {"1", "true", "yes"}
+DEFAULT_BASE_URL = "https://mcp.yidian.cn/api"
 SESSION_ID: Optional[str] = None
 LOG_PATH = os.environ.get("CODEX_MCP_DEBUG_LOG", "/tmp/prime_matrix_codex_bridge.log")
 
@@ -173,6 +171,49 @@ ENDPOINTS = {
 }
 
 
+def load_openclaw_config() -> Dict[str, Any]:
+    config_path = Path.home() / ".openclaw" / "openclaw.json"
+    try:
+        return json.loads(config_path.read_text(encoding="utf-8"))
+    except Exception:
+        return {}
+
+
+def lookup_model_api_key(config: Dict[str, Any], provider_id: str, env_name: str) -> str:
+    providers = (((config.get("models") or {}).get("providers")) or {})
+    provider = providers.get(provider_id) or {}
+    raw = provider.get("apiKey", "")
+    if raw == env_name:
+        return os.environ.get(env_name, "")
+    if isinstance(raw, str):
+        return raw
+    return ""
+
+
+def resolve_base_url(config: Dict[str, Any]) -> str:
+    env_value = os.environ.get("PRIMEMATRIX_BASE_URL") or os.environ.get("BASE_URL")
+    if env_value:
+        return env_value.rstrip("/")
+    providers = (((config.get("models") or {}).get("providers")) or {})
+    provider = providers.get("primematrixdata") or {}
+    raw = provider.get("baseUrl")
+    if isinstance(raw, str) and raw.strip():
+        return raw.rstrip("/")
+    return DEFAULT_BASE_URL
+
+
+def resolve_api_key(config: Dict[str, Any]) -> str:
+    env_value = os.environ.get("PRIMEMATRIX_MCP_API_KEY") or os.environ.get("MCP_API_KEY")
+    if env_value:
+        return env_value
+    return lookup_model_api_key(config, "primematrixdata", "PRIMEMATRIX_MCP_API_KEY")
+
+
+CONFIG = load_openclaw_config()
+BASE_URL = resolve_base_url(CONFIG)
+MCP_API_KEY = resolve_api_key(CONFIG)
+
+
 def write_message(message: Dict[str, Any]) -> None:
     log(f"OUT {json.dumps(message, ensure_ascii=False)}")
     payload = json.dumps(message, ensure_ascii=False).encode("utf-8")
@@ -228,18 +269,6 @@ def request_json(path: str, query_params: Dict[str, Any], session_id: Optional[s
     req = urllib.request.Request(url, headers=headers)
     with urllib.request.urlopen(req, timeout=45) as resp:
         return json.loads(resp.read().decode("utf-8"))
-
-
-def notify_init(session_id: str) -> None:
-    if not ENABLE_NPM_INIT:
-        return
-    url = f"{BASE_URL}/npm-init"
-    req = urllib.request.Request(url, headers={"X-MCP-Source": "mcp-stdio", "mcp-session-id": session_id})
-    try:
-        with urllib.request.urlopen(req, timeout=20):
-            return
-    except Exception:
-        return
 
 
 def handle_initialize(request_id: Any, params: Dict[str, Any]) -> None:
@@ -298,6 +327,24 @@ def handle_tools_call(request_id: Any, params: Dict[str, Any]) -> None:
         )
 
 
+def run_cli(tool_name: str, arguments: Dict[str, Any]) -> int:
+    if tool_name not in ENDPOINTS:
+        print(json.dumps({"ok": False, "error": f"Unknown tool: {tool_name}"}, ensure_ascii=False))
+        return 1
+    try:
+        if tool_name == "finance_info":
+            arguments.setdefault("start_year", "2020")
+            arguments.setdefault("end_year", "2024")
+        _, field_map = ENDPOINTS[tool_name]
+        query_params = {target_key: arguments.get(source_key) for source_key, target_key in field_map.items()}
+        data = request_json(ENDPOINTS[tool_name][0], query_params, None)
+        print(json.dumps(data, ensure_ascii=False))
+        return 0
+    except Exception as exc:
+        print(json.dumps({"ok": False, "error": str(exc)}, ensure_ascii=False))
+        return 1
+
+
 def handle_request(message: Dict[str, Any]) -> None:
     request_id = message.get("id")
     method = message.get("method")
@@ -334,6 +381,15 @@ def handle_request(message: Dict[str, Any]) -> None:
 
 
 def main() -> None:
+    if len(sys.argv) >= 3:
+        tool_name = sys.argv[1]
+        try:
+            arguments = json.loads(sys.argv[2])
+        except Exception as exc:
+            print(json.dumps({"ok": False, "error": f"Invalid JSON args: {exc}"}, ensure_ascii=False))
+            raise SystemExit(1)
+        raise SystemExit(run_cli(tool_name, arguments))
+
     while True:
         message = read_message()
         if message is None:

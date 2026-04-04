@@ -21,14 +21,14 @@ description: 客户首访前 briefing 技能。适用于“明天要拜访这家
 
 ```bash
 cd ~/.openclaw/extensions/aigroup-lead-discovery-openclaw
-node scripts/mcp_compat/prime_matrix_stdio_bridge.mjs company_name '{"blur_name":"华为"}'
-node scripts/mcp_compat/prime_matrix_stdio_bridge.mjs basic_info '{"company_name":"华为技术有限公司"}'
-node scripts/mcp_compat/prime_matrix_stdio_bridge.mjs shareholder_info '{"company_name":"华为技术有限公司"}'
-node scripts/mcp_compat/prime_matrix_stdio_bridge.mjs job_info '{"company_name":"华为技术有限公司"}'
-node scripts/mcp_compat/prime_matrix_stdio_bridge.mjs honor_info '{"company_name":"华为技术有限公司"}'
-node scripts/mcp_compat/prime_matrix_stdio_bridge.mjs ip_info '{"company_name":"华为技术有限公司"}'
-node scripts/mcp_compat/tianyancha_stdio_bridge.mjs companyBaseInfo '{"companyName":"华为技术有限公司"}'
-node scripts/mcp_compat/tianyancha_stdio_bridge.mjs risk '{"companyName":"华为技术有限公司"}'
+python3 scripts/mcp_compat/prime_matrix_stdio_bridge.py company_name '{"blur_name":"华为"}'
+python3 scripts/mcp_compat/prime_matrix_stdio_bridge.py basic_info '{"company_name":"华为技术有限公司"}'
+python3 scripts/mcp_compat/prime_matrix_stdio_bridge.py shareholder_info '{"company_name":"华为技术有限公司"}'
+python3 scripts/mcp_compat/prime_matrix_stdio_bridge.py job_info '{"company_name":"华为技术有限公司"}'
+python3 scripts/mcp_compat/prime_matrix_stdio_bridge.py honor_info '{"company_name":"华为技术有限公司"}'
+python3 scripts/mcp_compat/prime_matrix_stdio_bridge.py ip_info '{"company_name":"华为技术有限公司"}'
+python3 scripts/mcp_compat/tianyancha_stdio_bridge.py companyBaseInfo '{"companyName":"华为技术有限公司"}'
+python3 scripts/mcp_compat/tianyancha_stdio_bridge.py risk '{"companyName":"华为技术有限公司"}'
 ```
 
 ## 输出模板
