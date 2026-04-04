@@ -4,8 +4,6 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 
-const LOG_PATH = process.env.CODEX_MCP_DEBUG_LOG || "/tmp/prime_matrix_codex_bridge.log";
-
 function loadOpenClawEnv() {
   try {
     const cfg = JSON.parse(
@@ -19,14 +17,10 @@ function loadOpenClawEnv() {
 
 const OPENCLAW_ENV = loadOpenClawEnv();
 const BASE_URL = (
-  process.env.BASE_URL ||
-  process.env.PRIMEMATRIX_BASE_URL ||
   OPENCLAW_ENV.PRIMEMATRIX_BASE_URL ||
   "https://mcp.yidian.cn/api"
 ).replace(/\/+$/, "");
 const MCP_API_KEY =
-  process.env.MCP_API_KEY ||
-  process.env.PRIMEMATRIX_MCP_API_KEY ||
   OPENCLAW_ENV.PRIMEMATRIX_MCP_API_KEY ||
   "";
 
@@ -189,11 +183,7 @@ const ENDPOINTS = {
 let readBuffer = Buffer.alloc(0);
 
 function log(message) {
-  try {
-    fs.appendFileSync(LOG_PATH, `${message}\n`, "utf8");
-  } catch {
-    // ignore logging failures
-  }
+  void message;
 }
 
 function writeMessage(message) {

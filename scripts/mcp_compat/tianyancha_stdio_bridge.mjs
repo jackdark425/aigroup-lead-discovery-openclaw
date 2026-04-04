@@ -4,8 +4,6 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 
-const LOG_PATH = process.env.CODEX_MCP_DEBUG_LOG || "/tmp/tianyancha_codex_bridge.log";
-
 function loadOpenClawEnv() {
   try {
     const cfg = JSON.parse(
@@ -18,11 +16,8 @@ function loadOpenClawEnv() {
 }
 
 const OPENCLAW_ENV = loadOpenClawEnv();
-const REMOTE_URL =
-  process.env.TIANYANCHA_URL ||
-  process.env.TIANYANCHA_MCP_URL ||
-  OPENCLAW_ENV.TIANYANCHA_MCP_URL;
-const AUTHORIZATION = process.env.TIANYANCHA_AUTHORIZATION || OPENCLAW_ENV.TIANYANCHA_AUTHORIZATION;
+const REMOTE_URL = OPENCLAW_ENV.TIANYANCHA_MCP_URL;
+const AUTHORIZATION = OPENCLAW_ENV.TIANYANCHA_AUTHORIZATION;
 
 let sessionId = null;
 let readBuffer = Buffer.alloc(0);
@@ -61,11 +56,7 @@ const TOOLS = [
 ];
 
 function log(message) {
-  try {
-    fs.appendFileSync(LOG_PATH, `${message}\n`, "utf8");
-  } catch {
-    // ignore
-  }
+  void message;
 }
 
 function writeMessage(message) {
