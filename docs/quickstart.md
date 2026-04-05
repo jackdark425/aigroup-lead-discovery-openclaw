@@ -22,6 +22,27 @@ Expected results:
 - the plugin ships stable PrimeMatrixData and Tianyancha bridge scripts and skills that can call them through `exec`
 - the four lead-discovery skills appear as available skills
 
+## Recommended Trust Pinning
+
+To remove the `plugins.allow is empty` warning, add explicit plugin trust:
+
+```json
+{
+  "plugins": {
+    "allow": [
+      "aigroup-lead-discovery-openclaw",
+      "aigroup-financial-services-openclaw"
+    ]
+  }
+}
+```
+
+After updating config, restart the gateway and re-run:
+
+```bash
+openclaw plugins inspect aigroup-lead-discovery-openclaw
+```
+
 ## What This Plugin Does
 
 Use this plugin for:

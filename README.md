@@ -99,6 +99,23 @@ openclaw plugins inspect aigroup-financial-services-openclaw
 openclaw skills list
 ```
 
+## Recommended Trust Pinning
+
+If you want to silence the `plugins.allow is empty` warning and pin trust explicitly, add the two AIGroup suite ids to your OpenClaw config:
+
+```json
+{
+  "plugins": {
+    "allow": [
+      "aigroup-lead-discovery-openclaw",
+      "aigroup-financial-services-openclaw"
+    ]
+  }
+}
+```
+
+Then restart the gateway.
+
 ## Release Prep
 
 Validate the repository bundle shape directly:
