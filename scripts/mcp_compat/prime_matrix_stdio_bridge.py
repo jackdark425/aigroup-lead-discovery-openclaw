@@ -171,12 +171,39 @@ ENDPOINTS = {
 }
 
 
+def iter_openclaw_config_paths() -> list[Path]:
+    home = Path.home()
+    preferred = home / ".openclaw" / "openclaw.json"
+    others = sorted(home.glob(".openclaw*/openclaw.json"))
+    paths: list[Path] = []
+    if preferred.exists():
+        paths.append(preferred)
+    for candidate in others:
+        if candidate not in paths:
+            paths.append(candidate)
+    return paths
+
+
 def load_openclaw_config() -> Dict[str, Any]:
-    config_path = Path.home() / ".openclaw" / "openclaw.json"
-    try:
-        return json.loads(config_path.read_text(encoding="utf-8"))
-    except Exception:
-        return {}
+    for config_path in iter_openclaw_config_paths():
+        try:
+            return json.loads(config_path.read_text(encoding="utf-8"))
+        except Exception:
+            continue
+    return {}
+
+
+def load_best_provider_config(provider_id: str) -> Dict[str, Any]:
+    for config_path in iter_openclaw_config_paths():
+        try:
+            config = json.loads(config_path.read_text(encoding="utf-8"))
+        except Exception:
+            continue
+        providers = (((config.get("models") or {}).get("providers")) or {})
+        provider = providers.get(provider_id)
+        if isinstance(provider, dict) and provider:
+            return config
+    return load_openclaw_config()
 
 
 def lookup_model_api_key(config: Dict[str, Any], provider_id: str, env_name: str) -> str:
@@ -209,7 +236,7 @@ def resolve_api_key(config: Dict[str, Any]) -> str:
     return lookup_model_api_key(config, "primematrixdata", "PRIMEMATRIX_MCP_API_KEY")
 
 
-CONFIG = load_openclaw_config()
+CONFIG = load_best_provider_config("primematrixdata")
 BASE_URL = resolve_base_url(CONFIG)
 MCP_API_KEY = resolve_api_key(CONFIG)
 

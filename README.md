@@ -81,7 +81,7 @@ openclaw plugins install jackdark425/aigroup-lead-discovery-openclaw
 
 Published package:
 
-- `aigroup-lead-discovery-openclaw@0.1.6`
+- `aigroup-lead-discovery-openclaw@0.1.7`
 
 Recommended companion package:
 

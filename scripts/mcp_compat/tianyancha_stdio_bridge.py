@@ -7,12 +7,39 @@ from pathlib import Path
 from typing import Any, Dict, Optional
 
 
+def iter_openclaw_config_paths() -> list[Path]:
+    home = Path.home()
+    preferred = home / ".openclaw" / "openclaw.json"
+    others = sorted(home.glob(".openclaw*/openclaw.json"))
+    paths: list[Path] = []
+    if preferred.exists():
+        paths.append(preferred)
+    for candidate in others:
+        if candidate not in paths:
+            paths.append(candidate)
+    return paths
+
+
 def load_openclaw_config() -> Dict[str, Any]:
-    config_path = Path.home() / ".openclaw" / "openclaw.json"
-    try:
-        return json.loads(config_path.read_text(encoding="utf-8"))
-    except Exception:
-        return {}
+    for config_path in iter_openclaw_config_paths():
+        try:
+            return json.loads(config_path.read_text(encoding="utf-8"))
+        except Exception:
+            continue
+    return {}
+
+
+def load_best_provider_config(provider_id: str) -> Dict[str, Any]:
+    for config_path in iter_openclaw_config_paths():
+        try:
+            config = json.loads(config_path.read_text(encoding="utf-8"))
+        except Exception:
+            continue
+        providers = (((config.get("models") or {}).get("providers")) or {})
+        provider = providers.get(provider_id)
+        if isinstance(provider, dict) and provider:
+            return config
+    return load_openclaw_config()
 
 
 def resolve_tianyancha_settings(config: Dict[str, Any]) -> Dict[str, str]:
@@ -29,7 +56,7 @@ def resolve_tianyancha_settings(config: Dict[str, Any]) -> Dict[str, str]:
     return {"url": url, "authorization": auth}
 
 
-CONFIG = load_openclaw_config()
+CONFIG = load_best_provider_config("tianyancha")
 SETTINGS = resolve_tianyancha_settings(CONFIG)
 REMOTE_URL = SETTINGS["url"]
 AUTHORIZATION = SETTINGS["authorization"]
