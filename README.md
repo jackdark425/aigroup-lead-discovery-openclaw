@@ -6,7 +6,7 @@ This plugin is the recommended first install in the AIGroup banker stack. Instal
 
 This repository is a standalone OpenClaw-compatible Claude bundle. It packages:
 
-- four banker SOP skills for lead discovery
+- five banker SOP skills for lead discovery and customer investigation
 - two enterprise-intelligence MCP connectors
 - local stdio bridge scripts so the plugin does not depend on a developer-specific machine path
 
@@ -24,6 +24,7 @@ It is also designed to be used alongside the AIGroup data-service MCP stack:
 
 - `client-initial-screening`
 - `company-event-scan`
+- `customer-investigation`
 - `key-account-briefing`
 - `weekly-lead-watchlist`
 
@@ -150,6 +151,10 @@ Quickly decide whether a company is worth contacting at all. Focuses on entity c
 
 Turns web and enterprise-data signals into outreach triggers such as hiring, expansion, partnerships, honors, financing clues, and likely banking entry points.
 
+### `customer-investigation`
+
+Default banker workflow for turning company intelligence into a structured Chinese customer investigation report. Use it when a client manager needs entity confirmation, business summary, risk review, and banking entry points in one internal memo.
+
 ### `key-account-briefing`
 
 Produces a concise pre-meeting briefing for a banker before first contact or an on-site visit.
@@ -173,4 +178,4 @@ See [docs/validation.md](./docs/validation.md).
 
 - The plugin is distributed as a compatible bundle, not a native in-process OpenClaw plugin.
 - The Tianyancha and PrimeMatrixData integrations are routed through bundled Python bridge scripts. The default suite path uses skills plus stable `exec` commands; the optional MCP template is kept for advanced experiments only.
-- The recommended deployment model is suite-first: use this plugin for intelligence and data gathering, then use `aigroup-financial-services-openclaw` for modeling and deliverable workflows.
+- The recommended deployment model is suite-first: use this plugin for intelligence gathering and customer investigation, then use `aigroup-financial-services-openclaw` for customer analysis, modeling, and deliverable workflows.
