@@ -93,6 +93,7 @@ Quick install guide:
 - [docs/banker-stack.md](docs/banker-stack.md)
 - [docs/example-prompts.md](docs/example-prompts.md)
 - [docs/troubleshooting.md](docs/troubleshooting.md)
+- [docs/which-suite-to-use.md](docs/which-suite-to-use.md)
 
 ## Verify After Install
 
