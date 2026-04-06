@@ -21,8 +21,10 @@ def main() -> None:
     parser.add_argument("--capital-background", default="")
     parser.add_argument("--industry-position", default="")
     parser.add_argument("--risk-items", default="")
+    parser.add_argument("--event-signals", default="")
     parser.add_argument("--banking-entry-points", default="")
     parser.add_argument("--next-steps", default="")
+    parser.add_argument("--source-anchors", default="")
     parser.add_argument("--source-note", default="")
     parser.add_argument("--output", required=True)
     args = parser.parse_args()
@@ -51,6 +53,14 @@ def main() -> None:
             "项目融资：若存在扩产、智算中心、重大采购，可作为切入点。",
         ],
     )
+    event_signals = split_items(
+        args.event_signals,
+        [
+            "最新公告/新闻：需补充最新融资、扩产、招投标或重大合作线索。",
+            "经营动态：建议补抓近 90 天事件、媒体和公告，判断客户关系切入窗口。",
+            "组织动向：建议补看招聘、管理层变动和区域扩张线索。",
+        ],
+    )
     next_steps = split_items(
         args.next_steps,
         [
@@ -58,6 +68,14 @@ def main() -> None:
             "获取最新公开披露或财务摘要。",
             "补齐司法、经营、合规与知识产权风险信息。",
             "形成客户经理首次接触话术与产品切入建议。",
+        ],
+    )
+    source_anchors = split_items(
+        args.source_anchors,
+        [
+            "PrimeMatrixData：企业主体、基础画像和行业线索。",
+            "Tianyancha：工商、司法、风险、知识产权和合规补充。",
+            "公开披露 / 年报 / 公告：正式对外使用前必须进一步核验。",
         ],
     )
 
@@ -114,7 +132,23 @@ def main() -> None:
 
     lines += [
         "",
-        "## 六、银行合作切入点",
+        "## 六、事件线索与经营动态",
+        "",
+        "| 线索类型 | 内容 |",
+        "|----------|------|",
+    ]
+    for item in event_signals:
+        if "：" in item:
+            left, right = item.split("：", 1)
+        elif ":" in item:
+            left, right = item.split(":", 1)
+        else:
+            left, right = "事件线索", item
+        lines.append(f"| {left.strip()} | {right.strip()} |")
+
+    lines += [
+        "",
+        "## 七、银行合作切入点",
         "",
         "| 产品线 | 切入说明 |",
         "|--------|----------|",
@@ -130,15 +164,21 @@ def main() -> None:
 
     lines += [
         "",
-        "## 七、初步判断",
+        "## 八、初步判断",
         "",
         "- 该客户具备进一步覆盖价值，但正式推进前应先补齐财务、风险和经营动态核验。",
         "- 调查重点应围绕企业身份、资金需求、上下游链条和可落地银行产品展开。",
         "",
-        "## 八、下一步建议",
+        "## 九、下一步建议",
         "",
     ]
     lines.extend([f"{i + 1}. {item}" for i, item in enumerate(next_steps)])
+    lines += [
+        "",
+        "## 十、来源与核验锚点",
+        "",
+    ]
+    lines.extend([f"- {item}" for item in source_anchors])
     lines += [
         "",
         "---",
