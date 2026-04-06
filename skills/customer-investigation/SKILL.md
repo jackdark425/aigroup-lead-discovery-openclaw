@@ -18,6 +18,27 @@ description: Generate a banker-style customer investigation report in Chinese. U
 
 ## 默认流程
 
+## 稳定脚本路径
+
+当 OpenClaw 需要稳定落一版 Markdown 调查稿时，优先直接调用：
+
+```bash
+python skills/customer-investigation/scripts/build_customer_investigation.py \
+  --company "目标企业" \
+  --ticker "可选代码" \
+  --identity-lines "公司全称：目标企业|股票代码：688256.SH|经营状态：在营" \
+  --business-overview "企业主营业务简介" \
+  --capital-background "股权结构和融资背景摘要" \
+  --industry-position "行业位置和竞争观察" \
+  --risk-items "风险1|风险2|风险3" \
+  --banking-entry-points "现金管理：说明|供应链金融：说明|项目融资：说明" \
+  --next-steps "动作1|动作2|动作3" \
+  --source-note "初步调查稿，正式使用前需核验" \
+  --output /tmp/customer-investigation.md
+```
+
+这条路径的目标是稳定生成可内部使用的一版中文客户调查报告。
+
 ### Step 1: 客户识别与实体确认
 
 优先确认：
@@ -105,6 +126,7 @@ description: Generate a banker-style customer investigation report in Chinese. U
 ### 质量要求
 
 - 不要停留在两三段摘要
+- 如果可以稳定走脚本路径，先用脚本落一版完整 Markdown，再按需要补充更多事实
 - 至少包含 3 张表中的 2 张：
   - 客户身份表
   - 风险分级表
