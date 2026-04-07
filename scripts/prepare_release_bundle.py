@@ -4,14 +4,13 @@ from __future__ import annotations
 import shutil
 import subprocess
 import sys
+import json
 from pathlib import Path
 
 
 INCLUDE_PATHS = [
     ".claude-plugin",
-    ".mcp.optional.json",
     "skills",
-    "scripts/mcp_compat",
     "README.md",
     "LICENSE",
     "NOTICE",
@@ -26,12 +25,22 @@ def copy_path(source: Path, target: Path) -> None:
         shutil.copy2(source, target)
 
 
+def load_plugin_name(repo_root: Path) -> str:
+    manifest_path = repo_root / ".claude-plugin" / "plugin.json"
+    manifest = json.loads(manifest_path.read_text())
+    plugin_name = manifest.get("name")
+    if not plugin_name:
+        raise SystemExit("missing plugin name in .claude-plugin/plugin.json")
+    return plugin_name
+
+
 def main() -> None:
     if len(sys.argv) != 2:
         raise SystemExit("usage: prepare_release_bundle.py <target-dir>")
 
     repo_root = Path(__file__).resolve().parents[1]
     target_root = Path(sys.argv[1]).resolve()
+    expected_name = load_plugin_name(repo_root)
 
     if target_root.exists():
         shutil.rmtree(target_root)
@@ -50,7 +59,7 @@ def main() -> None:
             str(target_root),
             "--strict-release",
             "--expected-name",
-            repo_root.name,
+            expected_name,
         ],
         check=True,
     )

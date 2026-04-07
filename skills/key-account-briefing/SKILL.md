@@ -1,6 +1,6 @@
 ---
 name: key-account-briefing
-description: 客户首访前 briefing 技能。适用于“明天要拜访这家公司，帮我先做外网情报梳理”“给我一个客户画像卡和切入点”。使用 PrimeMatrixData-stdio、Tianyancha 与公开网页搜索，生成客户经理拜访前简报。
+description: 客户首访前 briefing 技能。适用于“明天要拜访这家公司，帮我先做外网情报梳理”“给我一个客户画像卡和切入点”。使用 PrimeMatrixData、Tianyancha 与公开网页搜索，生成客户经理拜访前简报。
 ---
 
 # 客户首访前 Briefing
@@ -9,27 +9,19 @@ description: 客户首访前 briefing 技能。适用于“明天要拜访这家
 
 ## 必做步骤
 
-1. 用 `PrimeMatrixData-stdio.company_name` 确认企业
+1. 用 `PrimeMatrixData.company_name` 确认企业
 2. 用 `basic_info` + `shareholder_info` 获取基本画像
 3. 用 `Tianyancha.companyBaseInfo` + `Tianyancha.risk` 做注册与风险交叉核验
 4. 用 `job_info` / `honor_info` / `ip_info` 补增长与亮点
 5. 补最新网页搜索，找最近 90 天事件
 
-## OpenClaw 稳定调用路径
+## OpenClaw 稳定调用策略
 
-如果 `PrimeMatrixData-stdio` 或 `Tianyancha` 在当前宿主注入失败，改用：
+如果 `PrimeMatrixData` 或 `Tianyancha` 在当前宿主注入失败，改用：
 
-```bash
-cd ~/.openclaw/extensions/aigroup-lead-discovery-openclaw
-python3 scripts/mcp_compat/prime_matrix_stdio_bridge.py company_name '{"blur_name":"华为"}'
-python3 scripts/mcp_compat/prime_matrix_stdio_bridge.py basic_info '{"company_name":"华为技术有限公司"}'
-python3 scripts/mcp_compat/prime_matrix_stdio_bridge.py shareholder_info '{"company_name":"华为技术有限公司"}'
-python3 scripts/mcp_compat/prime_matrix_stdio_bridge.py job_info '{"company_name":"华为技术有限公司"}'
-python3 scripts/mcp_compat/prime_matrix_stdio_bridge.py honor_info '{"company_name":"华为技术有限公司"}'
-python3 scripts/mcp_compat/prime_matrix_stdio_bridge.py ip_info '{"company_name":"华为技术有限公司"}'
-python3 scripts/mcp_compat/tianyancha_stdio_bridge.py companyBaseInfo '{"companyName":"华为技术有限公司"}'
-python3 scripts/mcp_compat/tianyancha_stdio_bridge.py risk '{"companyName":"华为技术有限公司"}'
-```
+- `aigroup-market-mcp` / `aigroup-fmp-mcp` 补企业基本面与上市信息
+- OpenClaw 自带 web / browser / search 补工商、股东、司法与最近 90 天事件
+- 输出时标记“结构化数据”与“公开网页核验”两类来源
 
 ## 输出模板
 

@@ -4,11 +4,11 @@ Lead-discovery and company-intelligence suite for banker workflows on OpenClaw.
 
 This plugin is the recommended first install in the AIGroup banker stack. Install it first as the intelligence and data-entry suite, then add `aigroup-financial-services-openclaw` as the downstream modeling and deliverables suite.
 
-This repository is a standalone OpenClaw-compatible Claude bundle. It packages:
+This repository is a standalone OpenClaw-compatible Claude bundle. The Hub release packages:
 
 - five banker SOP skills for lead discovery and customer investigation
-- two enterprise-intelligence MCP connectors
-- local stdio bridge scripts so the plugin does not depend on a developer-specific machine path
+- no bundled MCP bridge runtime by default
+- a clean skill-only install surface for OpenClaw Hub
 
 It is also designed to be used alongside the AIGroup data-service MCP stack:
 
@@ -28,11 +28,6 @@ It is also designed to be used alongside the AIGroup data-service MCP stack:
 - `key-account-briefing`
 - `weekly-lead-watchlist`
 
-### MCP connectors
-
-- `PrimeMatrixData-stdio`
-- `Tianyancha`
-
 ### Recommended companion AIGroup data services
 
 - `aigroup-fmp-mcp`
@@ -43,15 +38,12 @@ It is also designed to be used alongside the AIGroup data-service MCP stack:
 
 ```text
 .claude-plugin/plugin.json
-.mcp.optional.json
 skills/
-scripts/mcp_compat/
 ```
 
 OpenClaw detects this repository as a Claude bundle and maps:
 
 - `skills/` into normal OpenClaw skills
-- `.mcp.optional.json` as an optional MCP template
 
 ## Install
 
@@ -82,7 +74,7 @@ openclaw plugins install jackdark425/aigroup-lead-discovery-openclaw
 
 Published package:
 
-- `aigroup-lead-discovery-openclaw@0.1.7`
+- `aigroup-lead-discovery-openclaw@0.1.8`
 
 Recommended companion package:
 
@@ -130,16 +122,17 @@ Validate the repository bundle shape directly:
 python3 scripts/validate_bundle.py .
 ```
 
-ClawHub releases should be published from the repository root. `.clawhubignore` trims non-runtime files while preserving `.claude-plugin/plugin.json`, which is required for correct install identity on fresh OpenClaw profiles.
+ClawHub releases should be published from the repository root. The Hub release is intentionally skill-only so it avoids shipping optional bridge helpers that can trigger conservative static security scans.
 
 ## Environment
 
-Set these before using the plugin:
+Recommended data sources for best results:
 
-- `PRIMEMATRIX_MCP_API_KEY`
-- `PRIMEMATRIX_BASE_URL`
-- `TIANYANCHA_MCP_URL`
-- `TIANYANCHA_AUTHORIZATION`
+- `PrimeMatrixData`
+- `Tianyancha`
+- `aigroup-market-mcp`
+- `aigroup-fmp-mcp`
+- `aigroup-finnhub-mcp`
 
 ## What Each Skill Does
 
@@ -177,5 +170,5 @@ See [docs/validation.md](./docs/validation.md).
 ## Notes
 
 - The plugin is distributed as a compatible bundle, not a native in-process OpenClaw plugin.
-- The Tianyancha and PrimeMatrixData integrations are routed through bundled Python bridge scripts. The default suite path uses skills plus stable `exec` commands; the optional MCP template is kept for advanced experiments only.
+- The Hub release intentionally excludes optional local bridge helpers and focuses on portable skills.
 - The recommended deployment model is suite-first: use this plugin for intelligence gathering and customer investigation, then use `aigroup-financial-services-openclaw` for customer analysis, modeling, and deliverable workflows.
