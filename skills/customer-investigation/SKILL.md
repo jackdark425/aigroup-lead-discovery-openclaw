@@ -1,6 +1,6 @@
 ---
 name: customer-investigation
-description: Generate a banker-style customer investigation report in Chinese. Use when the user wants a customer diligence memo, client investigation, credit pre-screen, banking intake report, enterprise information collection, or a structured company-intelligence report that goes beyond a quick first-pass screen.
+description: Generate a structured company profile and onboarding memo in Chinese for internal banking relationship management. Use when a relationship manager needs a pre-meeting research brief, credit onboarding summary, or company overview report for a prospective corporate client. Sources data from authorised enterprise data services (PrimeMatrixData, Tianyancha) and public web search.
 ---
 
 # 客户调查
