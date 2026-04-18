@@ -7,6 +7,18 @@ description: 客户首访前 briefing 技能。适用于“明天要拜访这家
 
 用于拜访或首次触达前，快速形成一页式客户画像。
 
+## CN Lead-Gen Pre-flight（target 为中国公司时 MANDATORY）
+
+当 target 是中国大陆 / 港股 / 中概股 entity，**先加载并遵循** [`cn-lead-safety`](../cn-lead-safety/SKILL.md) 的 5 条 Rule：
+
+- **Rule 1** 中文 UTF-8 literal，禁 `\uXXXX` escape
+- **Rule 2** lexicon lookup（主包 cn-lexicon.js）
+- **Rule 3** 数据源 tier T1→T4
+- **Rule 4** 每个硬数字**内联** source citation
+- **Rule 5** 数据不可得标 "N/A"，禁 fabricate
+
+交付前 `python3 ../cn-lead-safety/scripts/verify_intelligence.py <briefing.md>` 必须 exit 0。
+
 ## 必做步骤
 
 1. 用 `PrimeMatrixData.company_name` 确认企业

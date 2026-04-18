@@ -7,6 +7,18 @@ description: Generate a structured company profile and onboarding memo in Chines
 
 为银行客户经理生成一版可内部使用的客户调查报告。默认中文输出，重点是把企业信息收集、风险识别、银行切入点和下一步动作整理成一份结构化调查稿。
 
+## CN Lead-Gen Pre-flight（target 为中国公司时 MANDATORY）
+
+当 target 是中国大陆 / 港股 / 中概股 entity（触发词：A股 / 港股 / 科创板 / 创业板 / 北交所 / 中概股 / H 股，或 `*.SH` / `*.SZ` / `*.BJ` / `*.HK` ticker，或公司中文名），**在开始本 skill 任何步骤之前**先加载并遵循 [`cn-lead-safety`](../cn-lead-safety/SKILL.md) skill 的 5 条 Rule：
+
+- **Rule 1** 中文 UTF-8 literal，禁 `\uXXXX` escape（MiniMax-M2.7 escape 下"寒武纪→宽厭谛79"类 typo 实测可复现）
+- **Rule 2** 公司名 / 术语 lexicon lookup（跨插件参考 `aigroup-financial-services-openclaw/skills/cn-client-investigation/references/cn-lexicon.js`，含 consumer_brand 等 6 行业词典）
+- **Rule 3** 数据源 tier：T1 巨潮/Tushare/交易所 > T2 天眼查/工商 > T3 FMP/Finnhub > T4 财经媒体
+- **Rule 4** 每个硬数字（营收/市值/员工数/融资等）必须**内联** source citation；客户调查尤其敏感，下游 `datapack-builder` / `dcf-model` 会引用本 skill 的 intelligence 作 primary 输入
+- **Rule 5** 数据不可得标 "N/A / 数据不可得"，**禁** fabricate 估算数字
+
+交付前必须跑 `python3 ../cn-lead-safety/scripts/verify_intelligence.py <investigation.md>`，exit 0 方可交给下游 banker workflow。
+
 ## 适用场景
 
 - 客户调查

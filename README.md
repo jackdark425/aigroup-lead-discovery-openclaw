@@ -72,6 +72,36 @@ openclaw plugins install ./aigroup-lead-discovery-openclaw
 openclaw plugins install jackdark425/aigroup-lead-discovery-openclaw
 ```
 
+### Claude Code
+
+This repository is a single self-contained Claude plugin, but Claude Code installs plugins through marketplaces, not raw clones. Register it as a one-plugin marketplace in `.claude/settings.json` (project or user scope):
+
+```json
+{
+  "extraKnownMarketplaces": {
+    "aigroup-lead-discovery": {
+      "source": {
+        "source": "settings",
+        "plugins": [
+          {
+            "name": "aigroup-lead-discovery-openclaw",
+            "source": {
+              "source": "github",
+              "repo": "jackdark425/aigroup-lead-discovery-openclaw"
+            }
+          }
+        ]
+      }
+    }
+  },
+  "enabledPlugins": {
+    "aigroup-lead-discovery-openclaw@aigroup-lead-discovery": true
+  }
+}
+```
+
+For an opinionated banker stack that wires this plugin alongside the financial-services bundles, see the companion `banker/` workspace — it ships a ready-made `.claude/settings.json`.
+
 Published package:
 
 - `aigroup-lead-discovery-openclaw@0.1.8`
