@@ -96,7 +96,7 @@ python3 ~/.openclaw/extensions/aigroup-lead-discovery-openclaw/skills/data-quali
 - **roe_definition_check (NEW)**: ROE 口径规范 —— 若 `provenance.md` 的 derivation 字段写作 "净利/营收" / "NI/Revenue" 而指标名是 ROE / 净资产收益率，判为 **fail**（这是净利率不是 ROE）。正确公式：ROE = 净利润 / 平均净资产。五粮液 2026-04-18 audit 的 ROE ~22% vs 年报 25.06% 差异即来自此错口径。
 - **price_basis_check (NEW)**: 同一公司股价与第二源差异 > 3% → flag。常见原因：T+0 vs T-1 vs 最新实时报价 vs 币种 vs 复权/不复权。海天 2026-04-19 audit 的 37.68 元 vs 35.60 元 即价差基准不一致。
 
-每条规则违反 → 单独产一条 FLAG 或 FAIL 条目。当前规则集总数 13（7 原有 + 3 新 restatement / ROE / price-basis + 3 后补扩展）。
+每条规则违反 → 单独产一条 FLAG 或 FAIL 条目。当前规则集总数 13（10 原有 + 3 新 restatement_aware / roe_definition_check / price_basis_check）。
 
 ### Step 5 — Emit audit-report.md
 
