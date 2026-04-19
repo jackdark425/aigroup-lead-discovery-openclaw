@@ -57,6 +57,15 @@ CITATION_ANCHORS = (
     "金融界", "jrj.com",
     "华尔街见闻", "wallstreetcn",
     "中国经济网", "国证",
+    # More T3 / T4 sources surfaced 2026-04-20 multi-company real-test
+    # (CATL / Midea / Ping An): 中国基金报 (chnfund), 界面新闻 (jiemian),
+    # 中鹏信评 (credit rating agency), plus a couple of peer rating shops.
+    "中国基金报", "chnfund",
+    "界面新闻", "jiemian",
+    "中鹏信评", "中诚信", "联合资信", "大公国际",  # credit rating agencies
+    "上海证券报", "证券日报", "证券时报",
+    "雪球", "xueqiu",
+    "派财经", "时代周报",
     "http://", "https://",
     "[^",  # markdown footnote marker
 )
