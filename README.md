@@ -2,6 +2,19 @@
 
 Lead-discovery and company-intelligence suite for banker workflows on OpenClaw.
 
+## Quick Install (macmini)
+
+**Just want it running?** See [QUICKSTART.md](QUICKSTART.md).
+
+```bash
+openclaw plugins install clawhub:aigroup-lead-discovery-openclaw@latest
+launchctl kickstart -k gui/$(id -u)/ai.openclaw.gateway
+bash ~/.openclaw/extensions/aigroup-lead-discovery-openclaw/scripts/preflight.sh
+```
+
+This is the **upstream** half — install this first, then add `aigroup-financial-services-openclaw` second.
+
+
 This plugin is the recommended first install in the AIGroup banker stack. Install it first as the intelligence and data-entry suite, then add `aigroup-financial-services-openclaw` as the downstream modeling and deliverables suite.
 
 This repository is a standalone OpenClaw-compatible Claude bundle. The Hub release packages:
