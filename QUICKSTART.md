@@ -7,7 +7,7 @@
 
 ```bash
 # 1. Install via ClawHub (public)
-openclaw plugins install clawhub:aigroup-lead-discovery-openclaw@latest
+openclaw plugins install clawhub:aigroup-lead-discovery-openclaw
 
 # 2. Restart gateway so cn-lead-safety + 5 lead-gen skills surface to main agent
 launchctl kickstart -k gui/$(id -u)/ai.openclaw.gateway
@@ -35,7 +35,7 @@ Same workaround as the financial-services plugin:
 
 ```bash
 find /var/folders -name "openclaw-clawhub-package-*" -type d 2>/dev/null | xargs rm -rf
-openclaw plugins install clawhub:aigroup-lead-discovery-openclaw@latest
+openclaw plugins install clawhub:aigroup-lead-discovery-openclaw
 ```
 
 ## Pair with the downstream banker plugin
@@ -43,7 +43,7 @@ openclaw plugins install clawhub:aigroup-lead-discovery-openclaw@latest
 Lead-discovery produces intelligence markdown that downstream banker workflow (datapack-builder / dcf-model / ppt-deliverable) reads. Install downstream too:
 
 ```bash
-openclaw plugins install clawhub:aigroup-financial-services-openclaw@latest
+openclaw plugins install clawhub:aigroup-financial-services-openclaw
 ```
 
 See its own `QUICKSTART.md` for setup.

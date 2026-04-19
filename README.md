@@ -7,7 +7,7 @@ Lead-discovery and company-intelligence suite for banker workflows on OpenClaw.
 **Just want it running?** See [QUICKSTART.md](QUICKSTART.md).
 
 ```bash
-openclaw plugins install clawhub:aigroup-lead-discovery-openclaw@latest
+openclaw plugins install clawhub:aigroup-lead-discovery-openclaw
 launchctl kickstart -k gui/$(id -u)/ai.openclaw.gateway
 bash ~/.openclaw/extensions/aigroup-lead-discovery-openclaw/scripts/preflight.sh
 ```

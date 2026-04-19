@@ -11,6 +11,8 @@ from pathlib import Path
 INCLUDE_PATHS = [
     ".claude-plugin",
     "skills",
+    "scripts",         # preflight.sh + helper scripts (needed post-install)
+    "QUICKSTART.md",   # 3-step macmini install guide
     "README.md",
     "LICENSE",
     "NOTICE",
