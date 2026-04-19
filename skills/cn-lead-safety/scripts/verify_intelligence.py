@@ -49,6 +49,14 @@ CITATION_ANCHORS = (
     "上交所", "深交所", "港交所", "SSE", "SZSE", "HKEX",
     "东方财富", "Choice", "Wind", "同花顺",
     "财新", "21世纪", "第一财经", "中证", "上证", "财联社", "澎湃",
+    # T3 / T4 financial portals frequently cited in banker intel memos —
+    # surfaced 2026-04-19 BYD real-test: sina quote pages + stockstar
+    # daily-flow news are common sources that were previously missing.
+    "新浪财经", "新浪", "sina.com.cn",
+    "证券之星", "stockstar",
+    "金融界", "jrj.com",
+    "华尔街见闻", "wallstreetcn",
+    "中国经济网", "国证",
     "http://", "https://",
     "[^",  # markdown footnote marker
 )

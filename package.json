@@ -1,6 +1,6 @@
 {
   "name": "aigroup-lead-discovery-openclaw",
-  "version": "0.5.1",
+  "version": "0.6.0",
   "private": false,
   "description": "Lead-discovery and company-intelligence suite for OpenClaw",
   "license": "Apache-2.0",
