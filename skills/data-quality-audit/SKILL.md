@@ -84,13 +84,19 @@ python3 ~/.openclaw/extensions/aigroup-lead-discovery-openclaw/skills/data-quali
 
 - **gross_margin_range**: 公司毛利率应该在 `[-20%, 95%]`（负毛利或超过 95% 需人工确认）
 - **revenue_growth_range**: 营收同比增速应该在 `[-50%, +200%]`（业务剧震需 flag）
-- **market_cap_check**: 若同份交付物声明了市值 / 股价 / 股本，`abs(market_cap − price × shares_outstanding) / market_cap < 3%`
-- **gross_profit_check**: 若声明了营收 / 毛利 / 毛利率，`abs(gross_profit − revenue × gross_margin) / gross_profit < 3%`
-- **net_margin_vs_gross**: 净利率不得 > 毛利率（基本恒等式）
-- **ocf_ni_directional**: 经营现金流和净利同向（若一正一负，flag）
-- **employee_mkt_ratio**: 市值 / 员工数 应该在 `[50 万, 5 亿 RMB]` 这个大区间（否则数据可疑，但只 flag 不 fail）
+- **market_cap_price_shares**: 若同份交付物声明了市值 / 股价 / 股本，`abs(market_cap − price × shares_outstanding) / market_cap < 3%`
+- **gross_profit_identity**: 若声明了营收 / 毛利 / 毛利率，`abs(gross_profit − revenue × gross_margin) / gross_profit < 3%`
+- **net_margin_not_above_gross**: 净利率不得 > 毛利率（基本恒等式）
+- **ocf_net_income_direction**: 经营现金流和净利同向（若一正一负，flag）
+- **employee_market_cap_ratio**: 市值 / 员工数 应该在 `[50 万, 5 亿 RMB]` 这个大区间（否则数据可疑，但只 flag 不 fail）
+- **dividend_payout_bound**: 分红率超过 100% 需人工确认（转增 / 资本公积送股可能误读）
+- **roe_extreme**: ROE 超过 50% 或为负需核验（杠杆 + 特殊事件）
+- **valuation_multiple_sanity**: P/E ≤ 200 且 EV/EBITDA ≤ 100
+- **restatement_aware (NEW)**: 对重述敏感字段 `{EPS, 归母净利润, BPS, 毛利率, 净资产, 营业收入}`，若 primary 值与第二源交叉验证差异 > 10%，flag 为可能 pre-restatement vs post-restatement 混用 —— 推荐优先核对**交易所 XBRL 最终版**或**最新年报重述版本**（而非最早刊发的原始版本）。海天味业 2026-04-19 audit 正是被这条规则定位到 EPS 2022 1.34 元 (pre-restatement) vs 1.11 元 (post-restatement) 差 20.7% 的真实场景。
+- **roe_definition_check (NEW)**: ROE 口径规范 —— 若 `provenance.md` 的 derivation 字段写作 "净利/营收" / "NI/Revenue" 而指标名是 ROE / 净资产收益率，判为 **fail**（这是净利率不是 ROE）。正确公式：ROE = 净利润 / 平均净资产。五粮液 2026-04-18 audit 的 ROE ~22% vs 年报 25.06% 差异即来自此错口径。
+- **price_basis_check (NEW)**: 同一公司股价与第二源差异 > 3% → flag。常见原因：T+0 vs T-1 vs 最新实时报价 vs 币种 vs 复权/不复权。海天 2026-04-19 audit 的 37.68 元 vs 35.60 元 即价差基准不一致。
 
-每条规则违反 → 单独产一条 FLAG 或 FAIL 条目。
+每条规则违反 → 单独产一条 FLAG 或 FAIL 条目。当前规则集总数 13（7 原有 + 3 新 restatement / ROE / price-basis + 3 后补扩展）。
 
 ### Step 5 — Emit audit-report.md
 

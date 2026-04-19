@@ -91,3 +91,38 @@ rules:
       - "市盈率"
       - "EV/EBITDA"
     logic: "pe <= 200 and ev_ebitda <= 100"
+
+  - id: restatement_aware
+    description: "对重述敏感字段（EPS / 归母净利润 / BPS / 毛利率 / 净资产 / 营业收入），若交叉验证第二源返回值与 analysis 声明差异 > 10%，flag 为可能是 pre-restatement vs post-restatement 混用 —— 优先核对交易所 XBRL 最终版或最新年报重述版本。"
+    severity: flag
+    applies_to:
+      - "EPS"
+      - "每股收益"
+      - "归母净利润"
+      - "归属于母公司所有者的净利润"
+      - "BPS"
+      - "每股净资产"
+      - "毛利率"
+      - "净资产"
+      - "营业收入"
+      - "营收"
+    logic: "abs(primary_value - crosscheck_value) / primary_value > 0.10  → flag 'possible pre-restatement vs post-restatement mismatch — verify XBRL final version'"
+
+  - id: roe_definition_check
+    description: "ROE 口径规范：ROE 应为 净利润 / 平均净资产，不是 净利润 / 营收（后者是净利率）。若 provenance 行注明 derivation = NI/Revenue 或 净利/营收 而指标名是 ROE / 净资产收益率，判定口径错。"
+    severity: fail
+    applies_to:
+      - "ROE"
+      - "净资产收益率"
+    logic: "若 derivation 字段匹配 /NI ?/ ?Revenue|净利 ?/ ?营收/ → fail with 'ROE 口径错 — ROE 应为 净利润 / 平均净资产，不是 净利率'"
+
+  - id: price_basis_check
+    description: "同一公司股价交叉验证：若与第二源差异 > 3%，flag 为 price basis drift —— 核对 T+0 收盘 vs T-1 收盘 vs 最新实时报价口径，并确认币种、复权/不复权一致。"
+    severity: flag
+    applies_to:
+      - "股价"
+      - "收盘价"
+      - "最新价"
+      - "stock price"
+      - "close"
+    logic: "abs(primary_price - crosscheck_price) / primary_price > 0.03  → flag 'price basis drift — 核对 T+0 收盘 vs T-1 vs 最新报价口径'"
