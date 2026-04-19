@@ -1,6 +1,6 @@
 {
   "name": "aigroup-lead-discovery-openclaw",
   "description": "Lead-discovery and company-intelligence suite for OpenClaw; install first, then pair with aigroup-financial-services-openclaw",
-  "version": "0.7.0",
+  "version": "0.7.1",
   "skills": "skills"
 }
