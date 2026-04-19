@@ -115,9 +115,9 @@ This repository is a single self-contained Claude plugin, but Claude Code instal
 
 For an opinionated banker stack that wires this plugin alongside the financial-services bundles, see the companion `banker/` workspace — it ships a ready-made `.claude/settings.json`.
 
-Published package:
+Published package (ClawHub `Latest`):
 
-- `aigroup-lead-discovery-openclaw@0.1.8`
+- `aigroup-lead-discovery-openclaw@0.3.1` (see [QUICKSTART.md](QUICKSTART.md) for install; tag here is informational only — ClawHub install resolves latest automatically)
 
 Recommended companion package:
 
