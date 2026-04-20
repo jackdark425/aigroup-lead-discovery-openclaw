@@ -1,0 +1,33 @@
+{
+  "_comment": "A股 / 上市公司数据来源：aigroup-market-mcp (Tushare). PrimeMatrixData + Tianyancha 由用户在 ~/.openclaw/openclaw.json 手动注册 — 本仓库的 scripts/mcp_compat/*.mjs 作为参考实现提供（OpenClaw 安全扫描会拒绝把带网络调用的 stdio 桥直接打包进插件；见 QUICKSTART.md 的手动配置步骤）。",
+  "mcpServers": {
+    "aigroup-market-mcp": {
+      "command": "npx",
+      "args": ["-y", "aigroup-market-mcp"],
+      "env": {
+        "TUSHARE_TOKEN": "${TUSHARE_TOKEN}"
+      },
+      "alwaysAllow": [
+        "basic_info",
+        "stock_data",
+        "stock_data_minutes",
+        "company_performance",
+        "company_performance_hk",
+        "company_performance_us",
+        "index_data",
+        "macro_econ",
+        "fund_data",
+        "fund_manager_by_name",
+        "convertible_bond",
+        "block_trade",
+        "margin_trade",
+        "money_flow",
+        "dragon_tiger_inst",
+        "csi_index_constituents",
+        "finance_news",
+        "hot_news",
+        "current_timestamp"
+      ]
+    }
+  }
+}

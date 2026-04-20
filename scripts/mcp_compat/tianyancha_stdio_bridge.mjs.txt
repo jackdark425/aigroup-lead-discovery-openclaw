@@ -1,23 +1,16 @@
 #!/usr/bin/env node
 
-import fs from "node:fs";
-import os from "node:os";
-import path from "node:path";
+// Env is supplied by the parent OpenClaw process via the `env:` block in
+// `.mcp.json` (values are expanded from `openclaw.json` env by OpenClaw
+// itself, then passed into this child process). Read them directly —
+// no file-reads, so the security scanner does not flag this bridge for
+// "file read combined with network send" (2026-04-20: earlier versions
+// hand-loaded openclaw.json and that pattern blocked install).
 
-function loadOpenClawEnv() {
-  try {
-    const cfg = JSON.parse(
-      fs.readFileSync(path.join(os.homedir(), ".openclaw", "openclaw.json"), "utf8"),
-    );
-    return cfg?.env || {};
-  } catch {
-    return {};
-  }
-}
-
-const OPENCLAW_ENV = loadOpenClawEnv();
-const REMOTE_URL = OPENCLAW_ENV.TIANYANCHA_MCP_URL;
-const AUTHORIZATION = OPENCLAW_ENV.TIANYANCHA_AUTHORIZATION;
+const REMOTE_URL =
+  process.env.TIANYANCHA_URL || process.env.TIANYANCHA_MCP_URL;
+const AUTHORIZATION =
+  process.env.TIANYANCHA_AUTHORIZATION;
 
 let sessionId = null;
 let readBuffer = Buffer.alloc(0);
@@ -60,10 +53,11 @@ function log(message) {
 }
 
 function writeMessage(message) {
-  const payload = Buffer.from(JSON.stringify(message), "utf8");
-  log(`OUT ${payload.toString("utf8")}`);
-  process.stdout.write(`Content-Length: ${payload.length}\r\n\r\n`);
-  process.stdout.write(payload);
+  // Newline-delimited JSON (standard MCP SDK + OpenClaw gateway framing).
+  // See prime_matrix_stdio_bridge for the rationale + 2026-04-20 timeout fix.
+  const payload = JSON.stringify(message);
+  log(`OUT ${payload}`);
+  process.stdout.write(payload + "\n");
 }
 
 function sendError(id, message) {
@@ -75,6 +69,17 @@ function sendResponse(id, result) {
 }
 
 function tryParseMessage() {
+  // Accept both newline-delimited (standard MCP) and LSP Content-Length framing.
+  const first = readBuffer.length > 0 ? readBuffer[0] : 0;
+  if (first === 0x7B /* '{' */ || first === 0x5B /* '[' */) {
+    const newlineIdx = readBuffer.indexOf(0x0A /* '\n' */);
+    if (newlineIdx === -1) return null;
+    const line = readBuffer.subarray(0, newlineIdx).toString("utf8").trim();
+    readBuffer = readBuffer.subarray(newlineIdx + 1);
+    if (!line) return null;
+    log(`IN ${line}`);
+    return JSON.parse(line);
+  }
   const delimiter = readBuffer.indexOf("\r\n\r\n");
   if (delimiter === -1) return null;
   const headerText = readBuffer.subarray(0, delimiter).toString("utf8");

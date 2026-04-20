@@ -2,20 +2,16 @@
 """
 quality-audit.py — helper for the data-quality-audit skill.
 
-Two modes:
+Mode:
 
     quality-audit.py --parse-only <data-provenance.md>
         Parse a data-provenance markdown table into a structured JSON array.
         One entry per hard-number row; the agent can then pick each entry
         and fire an independent MCP cross-check.
 
-    quality-audit.py --rules <common-sense-rules.yaml> <data-provenance.md>
-        (Not invoked by agents directly — reserved for a future rule-
-        evaluator that walks the rules YAML against parsed provenance.)
-
-The primary mode is --parse-only: the agent owns the actual cross-source
-fetch loop (it has the MCP tool list), this script is just a deterministic
-parser so agents don't have to guess at the provenance-table format.
+The agent owns the actual cross-source fetch loop (it has the MCP tool list);
+this script is just a deterministic parser so agents don't have to guess at
+the provenance-table format.
 
 Provenance-table convention (from cn-client-investigation/references/
 data-sources.md template):

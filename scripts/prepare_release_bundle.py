@@ -10,8 +10,9 @@ from pathlib import Path
 
 INCLUDE_PATHS = [
     ".claude-plugin",
+    ".mcp.json",       # 0.8.0+ declares CN MCP deps (aigroup-market-mcp + PrimeMatrixData + Tianyancha)
     "skills",
-    "scripts",         # preflight.sh + helper scripts (needed post-install)
+    "scripts",         # preflight.sh + stdio-bridge helpers (mcp_compat/*)
     "QUICKSTART.md",   # 3-step macmini install guide
     "README.md",
     "LICENSE",

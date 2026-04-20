@@ -1,27 +1,20 @@
 #!/usr/bin/env node
 
-import fs from "node:fs";
-import os from "node:os";
-import path from "node:path";
+// Env is supplied by the parent OpenClaw process via the `env:` block in
+// `.mcp.json` (values are expanded from `openclaw.json` env by OpenClaw
+// itself, then passed into this child process). Read them directly —
+// no file-reads, so the security scanner does not flag this bridge for
+// "file read combined with network send" (2026-04-20: earlier versions
+// hand-loaded openclaw.json and that pattern blocked install).
 
-function loadOpenClawEnv() {
-  try {
-    const cfg = JSON.parse(
-      fs.readFileSync(path.join(os.homedir(), ".openclaw", "openclaw.json"), "utf8"),
-    );
-    return cfg?.env || {};
-  } catch {
-    return {};
-  }
-}
-
-const OPENCLAW_ENV = loadOpenClawEnv();
 const BASE_URL = (
-  OPENCLAW_ENV.PRIMEMATRIX_BASE_URL ||
+  process.env.BASE_URL ||
+  process.env.PRIMEMATRIX_BASE_URL ||
   "https://mcp.yidian.cn/api"
 ).replace(/\/+$/, "");
 const MCP_API_KEY =
-  OPENCLAW_ENV.PRIMEMATRIX_MCP_API_KEY ||
+  process.env.MCP_API_KEY ||
+  process.env.PRIMEMATRIX_MCP_API_KEY ||
   "";
 
 const TOOLS = [
@@ -187,10 +180,13 @@ function log(message) {
 }
 
 function writeMessage(message) {
-  const payload = Buffer.from(JSON.stringify(message), "utf8");
-  log(`OUT ${payload.toString("utf8")}`);
-  process.stdout.write(`Content-Length: ${payload.length}\r\n\r\n`);
-  process.stdout.write(payload);
+  // Newline-delimited JSON (standard MCP SDK transport). OpenClaw's gateway
+  // and @modelcontextprotocol/sdk use this framing; the older LSP-style
+  // Content-Length framing causes a 30s connection timeout with the gateway
+  // (observed 2026-04-20 when registering PrimeMatrixData via openclaw mcp set).
+  const payload = JSON.stringify(message);
+  log(`OUT ${payload}`);
+  process.stdout.write(payload + "\n");
 }
 
 function makeTextResult(text, isError = false) {
@@ -208,6 +204,21 @@ function sendError(id, message) {
 }
 
 function tryParseMessage() {
+  // Accept BOTH framings: newline-delimited JSON (MCP SDK / OpenClaw gateway)
+  // as the primary, and LSP Content-Length framing as a fallback for direct
+  // stdio probes using the older convention.
+  // Fast path: if buffer starts with '{' (JSON object), use newline framing.
+  const first = readBuffer.length > 0 ? readBuffer[0] : 0;
+  if (first === 0x7B /* '{' */ || first === 0x5B /* '[' */) {
+    const newlineIdx = readBuffer.indexOf(0x0A /* '\n' */);
+    if (newlineIdx === -1) return null;
+    const line = readBuffer.subarray(0, newlineIdx).toString("utf8").trim();
+    readBuffer = readBuffer.subarray(newlineIdx + 1);
+    if (!line) return null;
+    log(`IN ${line}`);
+    return JSON.parse(line);
+  }
+  // LSP framing fallback.
   const delimiter = readBuffer.indexOf("\r\n\r\n");
   if (delimiter === -1) return null;
   const headerText = readBuffer.subarray(0, delimiter).toString("utf8");

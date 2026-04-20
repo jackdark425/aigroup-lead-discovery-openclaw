@@ -3,8 +3,6 @@ name: data-quality-audit
 description: "Independent cross-source audit of a completed CN banker deliverable. Use when the user asks to audit / double-check / 双核实 / 交叉验证 / 数据质量检查 / 审计 an existing deliverable directory. Re-fetches every hard number from the data-provenance.md table using an independent tier-2 source (Tushare vs 东方财富 vs 巨潮 vs FMP) and applies common-sense sanity rules (毛利率 in range / 收入增速 in range / 市值 = 股价 × 股本 / 毛利 = 营收 × 毛利率 / …). Emits an audit-report.md with PASS / FLAG / FAIL classification. This is a post-delivery QA step — the deliverable itself was already produced by customer-investigation / datapack-builder / ppt-deliverable."
 ---
 
-<!-- Audit skill for the AIGroup banker lead-discovery suite. 2026-04-18. -->
-
 # Data Quality Audit Skill
 
 **独立交叉核实 CN banker 交付物的数据质量 — 找到看似合理实则错误的数字**
